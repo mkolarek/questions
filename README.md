@@ -4,7 +4,7 @@ A collection of `pyspark` scripts exploring Wikipedia data dumps and how they ca
 
 ## Description
 
-More information about this project can be found in its' accompanying dev journal here [Asking questions](https://mkolarek.github.io).
+More information about this project can be found in its' accompanying dev journal here [Asking questions](https://mkolarek.github.io/posts/asking-questions/).
 
 ## Getting started
 
