@@ -53,4 +53,4 @@ clean: stop
 	docker image rm postgres:local
 	rm -rf sample/
 	rm -f schema.json
-	rm -rf data/
+	rm -rf .venv/
