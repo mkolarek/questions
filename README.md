@@ -38,23 +38,29 @@ and stop it with
 
 `make stop`.
 
-### Running the ETL jobs
+## Running the ETL jobs
 
 There are three separate ETL jobs that we can run:
+
+### Schema discovery
 
 `make schema.json`
 
 infers the schema of our dataset and stores it in `schema.json`
 
+### Sample generation
+
 `make sample`
 
 uses the inferred `schema.json` and creates a sample of our data in the `sample/` directory, in order to make further data exploration easier and quicker.
+
+### Cleaning up and loading the data
 
 `make load`
 
 uses the inferred `schema.json` and flattens our dataset, filtering out redirect articles and storing the data into the `wiki` database in our `wiki-postgres` container.
 
-### Cleaning up
+## Cleaning up
 
 We can clean up our environment by running
 
