@@ -1,7 +1,7 @@
 SPARK-XML := com.databricks:spark-xml_2.12:0.18.0
 POSTGRESQL := org.postgresql:postgresql:42.7.3
 
-all: install build run schema.json sample load
+all: install schema.json sample load
 
 install:
 	poetry install
@@ -17,8 +17,14 @@ run: build
 		-e PGDATA=/var/lib/postgresql/data/pgdata \
 		postgres:local
 
+start:
+	docker start wiki-postgres
+
 stop:
-	docker rm $$(docker stop $$(docker ps -a -q --filter="name=wiki-postgres"))
+	docker stop wiki-postgres
+
+rm:
+	docker rm wiki-postgres
 
 schema.json:
 	poetry run \
@@ -48,7 +54,7 @@ load: run schema.json
 		--input ${WIKIDATA_DUMP} \
 		--input_schema schema.json
 
-clean: stop
+clean: stop rm
 	docker image rm postgres:local
 	rm -rf sample/
 	rm -f schema.json
