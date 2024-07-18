@@ -7,8 +7,7 @@ install:
 	poetry install
 
 build:
-	docker build -t postgres:local .
-	mkdir -p data
+	docker build -t postgres:local postgres/
 
 run: build
 	docker run -d \
@@ -23,19 +22,19 @@ stop:
 
 schema.json:
 	poetry run \
-        spark-submit \
-        --packages ${SPARK-XML} \
-        --driver-memory 7g \
-        infer_schema.py \
-        --input ${WIKIDATA_DUMP} \
-        --output_schema schema.json
+	    spark-submit \
+		--packages ${SPARK-XML} \
+		--driver-memory 7g \
+		pyspark/infer_schema.py \
+		--input ${WIKIDATA_DUMP} \
+		--output_schema schema.json
 
 sample: schema.json
 	poetry run \
 		spark-submit \
 		--packages ${SPARK-XML} \
 		--driver-memory 7g \
-		sample.py \
+		pyspark/sample.py \
 		--input ${WIKIDATA_DUMP} \
 		--input_schema schema.json \
 		--output_sample sample
@@ -45,7 +44,7 @@ load: run schema.json
 		spark-submit \
 		--packages ${POSTGRESQL},${SPARK-XML} \
 		--driver-memory 7g \
-		load_to_postgres.py \
+		pyspark/load_to_postgres.py \
 		--input ${WIKIDATA_DUMP} \
 		--input_schema schema.json
 
