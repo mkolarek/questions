@@ -1,10 +1,13 @@
 # questions
 
-A collection of `pyspark` scripts exploring Wikipedia data dumps and how they can be used to generate questions.
+- A collection of `pyspark` scripts exploring Wikipedia data dumps and how they can be used to generate questions.
+- A small `flask`-based web app that generates questions by using `llama3` deployed via `ollama`.
 
 ## Description
 
-More information about this project can be found in its' accompanying dev journal here [Asking questions](https://mkolarek.github.io/posts/asking-questions-pt-1/).
+More information about this project can be found in its' accompanying dev journal here:
+- [Asking questions (pt. 1)](https://mkolarek.github.io/posts/asking-questions-pt-1/)
+- [Asking questions (pt. 2)](https://mkolarek.github.io/posts/asking-questions-pt-2/)
 
 ## Getting started
 
