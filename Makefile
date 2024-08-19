@@ -1,7 +1,7 @@
 SPARK-XML := com.databricks:spark-xml_2.12:0.18.0
 POSTGRESQL := org.postgresql:postgresql:42.7.3
 
-all: install schema.json sample load
+all: install schema.json sample load add_row_id download_model web
 
 install:
 	poetry install
@@ -12,19 +12,30 @@ build:
 run: build
 	docker run -d \
 		--name wiki-postgres \
-		-e POSTGRES_PASSWORD=postgres \
 		-p 5432:5432 \
+		-v /custom/mount:/var/lib/postgresql/data \
+		-e POSTGRES_PASSWORD=postgres \
 		-e PGDATA=/var/lib/postgresql/data/pgdata \
 		postgres:local
+	
+	docker run -d \
+		--name ollama \
+		-p 11434:11434 \
+		-v ollama:/root/.ollama \
+		--gpus=all \
+		ollama/ollama
 
 start:
 	docker start wiki-postgres
+	docker start ollama
 
 stop:
 	docker stop wiki-postgres
+	docker stop ollama
 
-rm:
+rm: stop
 	docker rm wiki-postgres
+	docker rm ollama
 
 schema.json:
 	poetry run \
@@ -54,7 +65,26 @@ load: run schema.json
 		--input ${WIKIDATA_DUMP} \
 		--input_schema schema.json
 
-clean: stop rm
+add_row_id:
+	docker exec \
+		-e PGPASSWORD=wiki \
+		wiki-postgres \
+		psql \
+		-U wiki \
+		-h 127.0.0.1 \
+		-d wiki \
+		-c 'ALTER TABLE wiki.wiki ADD row_id SERIAL;'
+
+download_model: run
+	docker exec -it ollama ollama pull llama3
+
+web: start
+	poetry run \
+		flask \
+		--app=flask/app.py \
+		run
+
+clean: rm
 	docker image rm postgres:local
 	rm -rf sample/
 	rm -f schema.json
