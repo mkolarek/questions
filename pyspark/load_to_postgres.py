@@ -40,7 +40,16 @@ schema = StructType.fromJson(schema_json)
 
 df = spark.read.format("xml").options(rowTag="page").schema(schema).load(args.input)
 
-df.filter(df.redirect._title.isNull()).createOrReplaceTempView("wiki")
+(
+    df.filter(df.redirect._title.isNull())
+    .filter(~df.title.contains("Wikipedia:"))
+    .filter(~df.title.contains("Template:"))
+    .filter(~df.title.contains("Draft:"))
+    .filter(~df.title.contains("Category:"))
+    .filter(~df.title.contains("Portal:"))
+    .filter(~df.title.contains("File:"))
+    .createOrReplaceTempView("wiki")
+)
 
 flattened = spark.sql("SELECT {} FROM wiki".format(", ".join(flatten(schema))))
 
