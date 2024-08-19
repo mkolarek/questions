@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<title>Result page</title>
+
+<body>
+  <h1>Result page</h1>
+  {% if answer == correct_answer %}
+  <p>Congratulations! You got it right!</p>
+  {% else %}
+  <p>Sorry, you got it wrong!</p>
+  {% endif %}
+  <form action={{ url_for("question") }}>
+    <input type="submit" value="New question!" />
+  </form>
+  <div class="content">
+    {% for message in get_flashed_messages() %}
+    <div class="alert">{{ message }}</div>
+    {% endfor %}
+    {% block content %} {% endblock %}
+  </div>
+</body>
+
+</html>

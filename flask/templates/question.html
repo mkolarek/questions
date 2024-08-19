@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<title>Question generator</title>
+
+<body>
+  <form method="post">
+    <fieldset>
+      <legend><a href="{{ question["article_link"] }}" target="blank">{{ question["article_title"] }}</a></legend>
+
+      <div>
+        <p>{{ question["question_text"] }}</p>
+      </div>
+
+      {% for answer in question["answers"] %}
+      <div>
+        <input type="radio" id="{{ answer["selection"] }}" name="answer" value="{{ answer["selection"] }}" />
+        <label for="{{ answer["selection"] }}">{{ answer["answer_text"] }}</label>
+      </div>
+      {% endfor %}
+
+      <div>
+        <input type="hidden" id="correct_answer" name="correct_answer" value="{{ question["correct_answer"] }}" />
+      </div>
+
+      <button>Submit</button>
+
+    </fieldset>
+  </form>
+  <div class="content">
+    {% for message in get_flashed_messages() %}
+    <div class="alert">{{ message }}</div>
+    {% endfor %}
+    {% block content %} {% endblock %}
+  </div>
+</body>
+
+</html>
